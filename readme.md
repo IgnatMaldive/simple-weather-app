@@ -1,1 +1,1 @@
-![cover01.jpg](https://github.com/IgnatMaldive/sample-gui/blob/main/Screenshot_2024-05-14_16-02-19.jpg)
+![cover01.jpg](https://github.com/IgnatMaldive/simple-weather-app/blob/main/weather.jpg)
