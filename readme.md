@@ -1,5 +1,5 @@
 
-```markdown
+
 # 🌤️ Weather App
 
 A simple weather application that displays the current weather conditions of a city along with a dynamic background image of the city. This app uses the OpenWeatherMap API to fetch weather data and the Unsplash API to fetch background images.
