@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .weather-icon {
+            width: 60px;
+            height: 60px;
+        }
+        #background {
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 flex items-center justify-center min-h-screen" id="background">
+
+  <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 max-w-md mx-auto">
+    <header class="flex items-center justify-between mb-4">
+      <div class="flex items-center gap-2">
+
+<h1 class="text-xl font-bold text-gray-800 dark:text-gray-100 pr-4">Weather App</h1>
+
+      </div>
+      <div class="relative">
+        <input id="city-input" class="flex h-10 border border-gray-300 px-3 text-sm bg-gray-100 dark:bg-gray-700 dark:text-gray-100 rounded-md w-64 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter a city" type="text" />
+      </div>
+    </header>
+
+    <main id="current-weather" class="flex flex-col items-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+      <div class="flex items-center gap-4 mb-4">
+        <h2 id="city-name" class="text-2xl font-bold text-gray-800 dark:text-gray-100">City Name</h2>
+        <div class="flex items-center text-4xl font-bold text-gray-800 dark:text-gray-100">
+          <span id="temperature">--°C</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 mb-4">
+        <div id="weather-icon" class="weather-icon">
+          <!-- Weather Icon will be injected here -->
+        </div>
+        <p id="weather-description" class="text-gray-500 dark:text-gray-400">Weather Description</p>
+      </div>
+      <div id="error-message" class="text-red-500"></div>
+    </main>
+  </div>
+
+  <script>
+    const apiKey = 'weather-map-api-key';
+    const unsplashAccessKey = 'usplash-api-key';
+    const weatherIcons = {
+        Clear: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-16 h-16 text-yellow-500"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>',
+        Clouds: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-16 h-16 text-gray-500"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"></path></svg>',
+        Rain: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-16 h-16 text-blue-500"><path d="M8 19c1.38 0 2.5 1.12 2.5 2.5S9.38 24 8 24s-2.5-1.12-2.5-2.5S6.62 19 8 19zm0-6c1.38 0 2.5 1.12 2.5 2.5S9.38 18 8 18s-2.5-1.12-2.5-2.5S6.62 13 8 13zm0-6c1.38 0 2.5 1.12 2.5 2.5S9.38 12 8 12s-2.5-1.12-2.5-2.5S6.62 7 8 7zm8 12c1.38 0 2.5 1.12 2.5 2.5S17.38 24 16 24s-2.5-1.12-2.5-2.5S14.62 19 16 19zm0-6c1.38 0 2.5 1.12 2.5 2.5S17.38 18 16 18s-2.5-1.12-2.5-2.5S14.62 13 16 13zm0-6c1.38 0 2.5 1.12 2.5 2.5S17.38 12 16 12s-2.5-1.12-2.5-2.5S14.62 7 16 7zm-8 4c1.38 0 2.5 1.12 2.5 2.5S9.38 16 8 16s-2.5-1.12-2.5-2.5S6.62 11 8 11zm8 0c1.38 0 2.5 1.12 2.5 2.5S17.38 16 16 16s-2.5-1.12-2.5-2.5S14.62 11 16 11z"></path></svg>',
+        Drizzle: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-16 h-16 text-blue-500"><path d="M8 19c1.38 0 2.5 1.12 2.5 2.5S9.38 24 8 24s-2.5-1.12-2.5-2.5S6.62 19 8 19zm0-6c1.38 0 2.5 1.12 2.5 2.5S9.38 18 8 18s-2.5-1.12-2.5-2.5S6.62 13 8 13zm0-6c1.38 0 2.5 1.12 2.5 2.5S9.38 12 8 12s-2.5-1.12-2.5-2.5S6.62 7 8 7zm8 12c1.38 0 2.5 1.12 2.5 2.5S17.38 24 16 24s-2.5-1.12-2.5-2.5S14.62 19 16 19zm0-6c1.38 0 2.5 1.12 2.5 2.5S17.38 18 16 18s-2.5-1.12-2.5-2.5S14.62 13 16 13zm0-6c1.38 0 2.5 1.12 2.5 2.5S17.38 12 16 12s-2.5-1.12-2.5-2.5S14.62 7 16 7zm-8 4c1.38 0 2.5 1.12 2.5 2.5S9.38 16 8 16s-2.5-1.12-2.5-2.5S6.62 11 8 11zm8 0c1.38 0 2.5 1.12 2.5 2.5S17.38 16 16 16s-2.5-1.12-2.5-2.5S14.62 11 16 11z"></path></svg>',
+        Thunderstorm: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-16 h-16 text-yellow-500"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"></path><line x1="12" y1="12" x2="12" y2="15"></line><line x1="9" y1="17" x2="12" y2="20"></line><line x1="15" y1="17" x2="12" y2="20"></line></svg>',
+        Snow: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-16 h-16 text-blue-500"><path d="M8 19c1.38 0 2.5 1.12 2.5 2.5S9.38 24 8 24s-2.5-1.12-2.5-2.5S6.62 19 8 19zm0-6c1.38 0 2.5 1.12 2.5 2.5S9.38 18 8 18s-2.5-1.12-2.5-2.5S6.62 13 8 13zm0-6c1.38 0 2.5 1.12 2.5 2.5S9.38 12 8 12s-2.5-1.12-2.5-2.5S6.62 7 8 7zm8 12c1.38 0 2.5 1.12 2.5 2.5S17.38 24 16 24s-2.5-1.12-2.5-2.5S14.62 19 16 19zm0-6c1.38 0 2.5 1.12 2.5 2.5S17.38 18 16 18s-2.5-1.12-2.5-2.5S14.62 13 16 13zm0-6c1.38 0 2.5 1.12 2.5 2.5S17.38 12 16 12s-2.5-1.12-2.5-2.5S14.62 7 16 7zm-8 4c1.38 0 2.5 1.12 2.5 2.5S9.38 16 8 16s-2.5-1.12-2.5-2.5S6.62 11 8 11zm8 0c1.38 0 2.5 1.12 2.5 2.5S17.38 16 16 16s-2.5-1.12-2.5-2.5S14.62 11 16 11z"></path></svg>',
+        Mist: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-16 h-16 text-gray-500"><path d="M2 12h2m2 0h2m2 0h2m2 0h2m2 0h2m2 0h2"></path><path d="M4 16h16"></path><path d="M4 8h16"></path></svg>'
+    };
+
+    async function getWeather() {
+        const city = document.getElementById('city-input').value;
+        const errorMessage = document.getElementById('error-message');
+        errorMessage.textContent = '';
+        
+        if (!city) {
+            errorMessage.textContent = 'Please enter a city name.';
+            return;
+        }
+
+        try {
+            const weatherResponse = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`);
+            if (!weatherResponse.ok) {
+                throw new Error(`Weather data not found for ${city}`);
+            }
+
+            const weatherData = await weatherResponse.json();
+            const weather = weatherData.weather[0].main;
+            const temp = weatherData.main.temp;
+            const description = weatherData.weather[0].description;
+            const icon = weatherIcons[weather] || '';
+
+            document.getElementById('city-name').textContent = city;
+            document.getElementById('temperature').textContent = `${temp}°C`;
+            document.getElementById('weather-description').textContent = description.charAt(0).toUpperCase() + description.slice(1);
+            document.getElementById('weather-icon').innerHTML = icon;
+
+            const unsplashResponse = await fetch(`https://api.unsplash.com/photos/random?query=${city}&client_id=${unsplashAccessKey}`);
+            if (!unsplashResponse.ok) {
+                throw new Error(`Image not found for ${city}`);
+            }
+
+            const unsplashData = await unsplashResponse.json();
+            document.getElementById('background').style.backgroundImage = `url(${unsplashData.urls.regular})`;
+
+        } catch (error) {
+            errorMessage.textContent = `Error fetching data: ${error.message}`;
+            document.getElementById('background').style.backgroundImage = '';
+        }
+    }
+
+    document.getElementById('city-input').addEventListener('input', function () {
+        document.getElementById('error-message').textContent = '';
+    });
+
+    document.getElementById('city-input').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            getWeather();
+        }
+    });
+  </script>
+
+</body>
+</html>
