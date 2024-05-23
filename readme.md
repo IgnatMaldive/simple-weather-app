@@ -48,9 +48,6 @@ A simple weather application that displays the current weather conditions of a c
 2. Press Enter to fetch and display the weather information and background image.
 3. If an error occurs, an error message will be displayed. Start typing again to clear the error and try a new city name.
 
-## 📸 Screenshots
-
-![Weather App Screenshot](path_to_screenshot_image)
 
 ## 🐞 Error Handling
 
