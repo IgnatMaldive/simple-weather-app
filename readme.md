@@ -1,6 +1,6 @@
 
 
-# 🌤️ Weather App
+# 🌤️ Weather App (Ai development agent workshop)
 
 A simple weather application that displays the current weather conditions of a city along with a dynamic background image of the city. This app uses the OpenWeatherMap API to fetch weather data and the Unsplash API to fetch background images.
 
@@ -61,18 +61,5 @@ This project is licensed under the MIT License.
 
 ---
 
-🌦️ Made with ❤️ by [Your Name](https://github.com/ignatmaldive)
+🌦️ Made with ❤️ by [Ignat](https://github.com/ignatmaldive)
 ```
-
-### Explanation
-
-- **Title and Description**: Provides a brief overview of the app.
-- **Features**: Lists the key features of the app using Unicode icons.
-- **Technologies Used**: Lists the technologies used to build the app.
-- **Getting Started**: Provides steps to set up and run the app, including prerequisites, installation instructions, and usage instructions.
-- **Screenshots**: Placeholder for a screenshot of the app (you can replace `path_to_screenshot_image` with the actual path to your screenshot).
-- **Error Handling**: Describes how the app handles errors.
-- **License**: Specifies the license under which the app is released.
-- **Contact**: Provides contact information for inquiries.
-
-Feel free to replace placeholder texts (like `YOUR_OPENWEATHERMAP_API_KEY`, `YOUR_UNSPLASH_ACCESS_KEY`, `path_to_screenshot_image`, etc.) with actual values specific to your app.
